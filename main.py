@@ -97,8 +97,8 @@ def get_current_user():
 
 @app.route("/logout", methods=["POST"])
 def logout_user():
-    session.pop("user_id")
-    return "200"
+    session.pop('user_id', None)
+    return {"message": "Logged out successfully"}, 200
 
 # Here we are getting the query params days and destination,
 # example of endpoint: http://127.0.0.1:8080/get_plan?days=3&destination=London
