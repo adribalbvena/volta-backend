@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from uuid import uuid4
 
 db = SQLAlchemy()  # this is a common line of code used when working with the SQLAlchemy library,
@@ -6,7 +7,6 @@ db = SQLAlchemy()  # this is a common line of code used when working with the SQ
 # This line of code creates a new instance of the SQLAlchemy class and assigns it to the variable db.
 # This instance can then be used to interact with a database, such as creating tables,
 # inserting data, querying data, etc.
-
 
 
 def create_uuid():
@@ -29,11 +29,20 @@ class Trip(db.Model):
     __tablename__ = "trips"
     id = db.Column(db.String(32), primary_key=True, unique=True, default=create_uuid())
     destination = db.Column(db.String(70))
-    startDate = db.Column(db.DateTime())
-    endDate = db.Column(db.DateTime())
+    start_date = db.Column(db.DateTime())
+    end_date = db.Column(db.DateTime())
+    creation_date = db.Column(db.DateTime(), default=func.now())
     user_id = db.Column(db.String(32), db.ForeignKey("users.id"))  # here we are saying that
     # one user can have many trips, and the trips are related to the user
     plans = db.relationship('Plan')
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'destination': self.destination,
+            'start_date': self.start_date.strftime('%d/%m/%Y'),
+            'end_date': self.end_date.strftime('%d/%m/%Y')
+        }
 
 
 class Plan(db.Model):

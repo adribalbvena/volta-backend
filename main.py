@@ -1,5 +1,6 @@
+import datetime
 import requests
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, session, abort
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_session import Session
@@ -94,7 +95,10 @@ def get_current_user():
     })
 
 
-
+@app.route("/logout", methods=["POST"])
+def logout_user():
+    session.pop("user_id")
+    return "200"
 
 # Here we are getting the query params days and destination,
 # example of endpoint: http://127.0.0.1:8080/get_plan?days=3&destination=London
@@ -116,10 +120,35 @@ def get_plan():
     else:
         return jsonify({'error': 'Failed to get data from API'}), 500
 
+
 # THINGS TO DO:
 # ENDPOINT: '/get_trips' this endpoint will be returning the user trips stored in our database
 
 # ENDPOINT: '/add_trip' this endpoint adds a user trip to our database
+@app.route('/users/trips', methods=['POST'])
+def add_trip():
+    user_session_id = session.get('user_id')
+    user = User.query.get(user_session_id)
+    if user is None:
+        abort(404, description='User not found')
+
+    # Get the necessary data from the request
+    destination = request.json.get('destination')
+    start_date = datetime.datetime.strptime(request.json.get('start_date'), '%d/%m/%Y')
+    end_date = datetime.datetime.strptime(request.json.get('end_date'), '%d/%m/%Y')
+
+    # Create a new trip object and add it to the user's trips
+    trip = Trip(destination=destination, start_date=start_date, end_date=end_date)
+    user.trips.append(trip)
+
+    # Save the changes to the database
+    db.session.add(trip)
+    db.session.commit()
+
+    # Return a response with the newly created trip object
+    return jsonify(trip.serialize()), 201
+
+
 
 # ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
 
