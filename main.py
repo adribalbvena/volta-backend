@@ -8,6 +8,7 @@ from config import Config
 from models import db, User, Trip, Activity, Plan
 from dotenv import load_dotenv
 import os
+from utils import create_uuid
 
 load_dotenv()
 
@@ -42,8 +43,9 @@ def add_user():
 
     # and if the user does not exist yet, then we create a new one
     encrypted_password = bcrypt.generate_password_hash(password)  # first, we use bcrypt to encrypt the password
-    new_user = User(email=email,
-                    password=encrypted_password)  # then, we pass the received parameter email and the encrypted password
+    new_user = User(id=create_uuid(),
+                    email=email,
+                    password=encrypted_password)  # then, we pass the received parameters
     db.session.add(new_user)  # and then we add the new user to our db
     db.session.commit()  # and kinda 'execute' those changes with commit
 
@@ -97,8 +99,9 @@ def get_current_user():
 
 @app.route("/logout", methods=["POST"])
 def logout_user():
-    session.pop('user_id', None)
+    session.pop('user_id', None)  # this is to remove the user_id key from the session, and set its value to None
     return {"message": "Logged out successfully"}, 200
+
 
 # Here we are getting the query params days and destination,
 # example of endpoint: http://127.0.0.1:8080/get_plan?days=3&destination=London
@@ -123,6 +126,21 @@ def get_plan():
 
 # THINGS TO DO:
 # ENDPOINT: '/get_trips' this endpoint will be returning the user trips stored in our database
+@app.route('/users/trips', methods=["GET"])
+def get_trips():
+    user_session_id = session.get('user_id')
+    user = User.query.get(user_session_id)
+    if user is None:
+        abort(404, description='User not found')
+
+    trips = Trip.query.filter_by(user_id=user_session_id).all()
+
+    # Serialize the trips to JSON format
+    trips_json = [trip.serialize() for trip in trips]
+
+    # Return the serialized trips as a JSON response
+    return jsonify(trips_json), 200
+
 
 # ENDPOINT: '/add_trip' this endpoint adds a user trip to our database
 @app.route('/users/trips', methods=['POST'])
@@ -138,7 +156,7 @@ def add_trip():
     end_date = datetime.datetime.strptime(request.json.get('end_date'), '%d/%m/%Y')
 
     # Create a new trip object and add it to the user's trips
-    trip = Trip(destination=destination, start_date=start_date, end_date=end_date)
+    trip = Trip(id=create_uuid(), destination=destination, start_date=start_date, end_date=end_date)
     user.trips.append(trip)
 
     # Save the changes to the database
@@ -149,11 +167,11 @@ def add_trip():
     return jsonify(trip.serialize()), 201
 
 
-
 # ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
 
 # ENDPOINT: '/add_plan' this endpoint adds the plan to a user trip and then store it to database,
 # like add the plan to favorites but the favorite is inside the list of trips... is not an easy task tbh xd
+
 
 # TEST: create a py file named 'test' and create the structure for the test (same as in the course, as we already did)
 
