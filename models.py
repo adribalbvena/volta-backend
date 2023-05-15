@@ -27,7 +27,7 @@ class Trip(db.Model):
     creation_date = db.Column(db.DateTime(), default=func.now())
     user_id = db.Column(db.String(32), db.ForeignKey("users.id"))  # here we are saying that
     # one user can have many trips, and the trips are related to the user
-    plans = db.relationship('Plan')
+    plans = db.relationship('Plan', cascade="all, delete")
 
     def serialize(self):
         return {
@@ -43,7 +43,7 @@ class Plan(db.Model):
     __tablename__ = "plan"
     day_number = db.Column(db.Integer, primary_key=True)
     trip_id = db.Column(db.String(32), db.ForeignKey("trips.id"))
-    activities = db.relationship("Activity")
+    activities = db.relationship("Activity", cascade="all, delete")
 
 
 class Activity(db.Model):

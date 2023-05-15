@@ -6,7 +6,7 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SECRET_KEY = os.environ["SECRET_KEY"]
     # set our local database:
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://adri:cfgadri@localhost/volta'
     # to stop loggin messages when we do anything:
@@ -19,3 +19,5 @@ class Config:
     SESSION_PERMANENT = False  # indicates whether to use permanent sessions
     SESSION_USE_SIGNER = True  # indicates whether to sign the session cookie identifier
     SESSION_REDIS = redis.from_url('redis://127.0.0.1:6379')  # specifies the Redis instance
+    # SESSION_COOKIE_SAMESITE = 'None'
+    # SESSION_COOKIE_SECURE = True
