@@ -17,6 +17,7 @@ app.config.from_object(Config)
 
 server_session = Session(app)
 bcrypt = Bcrypt(app)
+# CORS(app, supports_credentials=True)
 CORS(app, supports_credentials=True)
 db.init_app(app)
 
@@ -49,6 +50,8 @@ def add_user():
     db.session.add(new_user)  # and then we add the new user to our db
     db.session.commit()  # and kinda 'execute' those changes with commit
 
+    session["user_id"] = new_user.id
+
     return jsonify({
         'id': new_user.id,
         'email': new_user.email
@@ -74,6 +77,7 @@ def user_login():
         return jsonify({'error': 'Unauthorized'}), 401
 
     session['user_id'] = user.id
+    print(session.get('user_id'))
 
     return jsonify({
         'id': user.id,
@@ -95,12 +99,6 @@ def get_current_user():
         'id': user.id,
         'email': user.email
     })
-
-
-@app.route("/logout", methods=["POST"])
-def logout_user():
-    session.pop('user_id', None)  # this is to remove the user_id key from the session, and set its value to None
-    return {"message": "Logged out successfully"}, 200
 
 
 # Here we are getting the query params days and destination,
@@ -128,18 +126,40 @@ def get_plan():
 # ENDPOINT: '/get_trips' this endpoint will be returning the user trips stored in our database
 @app.route('/users/trips', methods=["GET"])
 def get_trips():
+    # if "user_id" not in session:
+    #     abort(401, "Unauthorized")
     user_session_id = session.get('user_id')
-    user = User.query.get(user_session_id)
+    print(user_session_id)
+    user = db.session.get(User, user_session_id)
     if user is None:
         abort(404, description='User not found')
 
-    trips = Trip.query.filter_by(user_id=user_session_id).all()
+    trips = Trip.query.filter_by(user_id=user_session_id).order_by(Trip.creation_date.desc()).all()
 
     # Serialize the trips to JSON format
     trips_json = [trip.serialize() for trip in trips]
 
     # Return the serialized trips as a JSON response
-    return jsonify(trips_json), 200
+    response = jsonify(trips_json)
+    # response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response, 200
+
+
+# ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
+@app.route('/user/trips/<trip_id>', methods=['DELETE']) # this is wrong bs u can delete any trip of any user
+def delete_trip(trip_id):
+    trip = Trip.query.get(trip_id)
+    if trip is None:
+        abort(404, description='Trip not found')
+
+    user_session_id = session.get('user_id')
+    if trip.user.id != user_session_id:
+        abort(403, description='You are not authorized to delete this trip')
+
+    db.session.delete(trip)
+    db.session.commit()
+
+    return jsonify({'message': 'Trip and associated data deleted successfully'}), 200
 
 
 # ENDPOINT: '/add_trip' this endpoint adds a user trip to our database
@@ -167,13 +187,17 @@ def add_trip():
     return jsonify(trip.serialize()), 201
 
 
-# ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
-
 # ENDPOINT: '/add_plan' this endpoint adds the plan to a user trip and then store it to database,
 # like add the plan to favorites but the favorite is inside the list of trips... is not an easy task tbh xd
 
 
 # TEST: create a py file named 'test' and create the structure for the test (same as in the course, as we already did)
+
+@app.route("/logout", methods=["POST"])
+def logout_user():
+    session.pop("user_id", None)  # this is to remove the user_id key from the session, and set its value to None
+    return {"message": "Logged out successfully"}, 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
