@@ -41,13 +41,15 @@ class Trip(db.Model):
 
 class Plan(db.Model):
     __tablename__ = "plan"
-    day_number = db.Column(db.Integer, primary_key=True)
-    trip_id = db.Column(db.String(32), db.ForeignKey("trips.id"))
+    id = db.Column(db.String(36), primary_key=True, unique=True)
+    day_number = db.Column(db.Integer)
+    trip_id = db.Column(db.String(36), db.ForeignKey("trips.id"))
     activities = db.relationship("Activity", cascade="all, delete")
 
 
 class Activity(db.Model):
     __tablename__ = "activities"
-    hour = db.Column(db.String(50), primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, unique=True)
+    hour = db.Column(db.String(50))
     description = db.Column(db.Text)
-    day_number = db.Column(db.Integer, db.ForeignKey("plan.day_number"))
+    plan_id = db.Column(db.String(36), db.ForeignKey("plan.id"))
