@@ -189,7 +189,39 @@ def add_trip():
 
 # ENDPOINT: '/add_plan' this endpoint adds the plan to a user trip and then store it to database,
 # like add the plan to favorites but the favorite is inside the list of trips... is not an easy task tbh xd
+@app.route('/trips/<trip_id>/plans', methods=['POST'])
+def add_plan(trip_id):
+    trip = Trip.query.filter_by(id=trip_id).first()
+    if not trip:
+        abort(404, description='Trip not found')
 
+    data = request.get_json()
+    if not data:
+        abort(400, description='No data provided.')
+
+    day_number = data.get('day')
+    activities = data.get('activities')
+
+    if not day_number:
+        abort(400, description='Day number is required.')
+
+    plan = Plan(id=create_uuid(), day_number=day_number, trip_id=trip_id)
+    db.session.add(plan)
+
+    if activities:
+        for activity_data in activities:
+            hour = activity_data.get('time')
+            description = activity_data.get('description')
+
+            if not hour:
+                abort(400, description='Hour is required for each activity.')
+
+            activity = Activity(id=create_uuid(), hour=hour, description=description, plan_id=plan.id)
+            db.session.add(activity)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Plan added successfully.'}), 201
 
 # TEST: create a py file named 'test' and create the structure for the test (same as in the course, as we already did)
 

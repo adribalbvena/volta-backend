@@ -19,5 +19,5 @@ class Config:
     SESSION_PERMANENT = False  # indicates whether to use permanent sessions
     SESSION_USE_SIGNER = True  # indicates whether to sign the session cookie identifier
     SESSION_REDIS = redis.from_url('redis://127.0.0.1:6379')  # specifies the Redis instance
-    # SESSION_COOKIE_SAMESITE = 'None'
-    # SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
