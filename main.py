@@ -146,7 +146,7 @@ def get_trips():
 
 
 # ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
-@app.route('/user/trips/<trip_id>', methods=['DELETE']) # this is wrong bs u can delete any trip of any user
+@app.route('/user/trips/<trip_id>', methods=['DELETE'])  # this is wrong bs u can delete any trip of any user
 def delete_trip(trip_id):
     trip = Trip.query.get(trip_id)
     if trip is None:
@@ -222,6 +222,29 @@ def add_plan(trip_id):
     db.session.commit()
 
     return jsonify({'message': 'Plan added successfully.'}), 201
+
+
+@app.route("/trips/<trip_id>/plan", methods=["GET"])
+def get_plan_from_db(trip_id):
+    trip = Trip.query.get(trip_id)
+    if trip is None:
+        return jsonify({"error": "Trip not found"}), 404
+
+    plan = []
+    for plan_entry in trip.plans:
+        day_activities = {
+            "day": plan_entry.day_number,
+            "activities": []
+        }
+        for activity in plan_entry.activities:
+            day_activities["activities"].append({
+                "time": activity.hour,
+                "description": activity.description
+            })
+        plan.insert(0, day_activities)
+
+    return jsonify({"plan": plan})
+
 
 # TEST: create a py file named 'test' and create the structure for the test (same as in the course, as we already did)
 
