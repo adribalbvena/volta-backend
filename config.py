@@ -19,5 +19,7 @@ class Config:
     SESSION_PERMANENT = False  # indicates whether to use permanent sessions
     SESSION_USE_SIGNER = True  # indicates whether to sign the session cookie identifier
     SESSION_REDIS = redis.from_url('redis://127.0.0.1:6379')  # specifies the Redis instance
-    SESSION_COOKIE_SAMESITE = 'None'
-    SESSION_COOKIE_SECURE = True
+
+    # To run the react frontend part is mandatory uncomment this two configs, but is not to running it in postman which is just http
+    # SESSION_COOKIE_SAMESITE = 'None'
+    # SESSION_COOKIE_SECURE = True
