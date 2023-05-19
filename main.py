@@ -8,7 +8,7 @@ from config import Config
 from models import db, User, Trip, Activity, Plan
 from dotenv import load_dotenv
 import os
-from utils import create_uuid
+from utils import create_uuid, require_auth
 
 load_dotenv()
 
@@ -17,7 +17,6 @@ app.config.from_object(Config)
 
 server_session = Session(app)
 bcrypt = Bcrypt(app)
-# CORS(app, supports_credentials=True)
 CORS(app, supports_credentials=True)
 db.init_app(app)
 
@@ -27,6 +26,15 @@ db.init_app(app)
 #  within the context of our Flask application.
 with app.app_context():
     db.create_all()  # this method is used to create all the tables that are defined in the database schema.
+
+
+def check_user():
+    user_authenticated_id = session.get('user_id')
+
+    if not user_authenticated_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    return user_authenticated_id
 
 
 @app.route('/register', methods=["POST"])
@@ -77,7 +85,7 @@ def user_login():
         return jsonify({'error': 'Unauthorized'}), 401
 
     session['user_id'] = user.id
-    print(session.get('user_id'))
+    # print(session.get('user_id'))
 
     return jsonify({
         'id': user.id,
@@ -86,12 +94,9 @@ def user_login():
 
 
 @app.route('/@current_user', methods=["GET"])
+@require_auth
 def get_current_user():
-    # if there is an invalid session this will return None
     user_authenticated_id = session.get('user_id')
-
-    if not user_authenticated_id:
-        return jsonify({'error': 'Unauthorized'}), 401
 
     # and if the session is valid, then will return the user that we are querying here by id
     user = User.query.filter_by(id=user_authenticated_id).first()
@@ -122,15 +127,12 @@ def get_plan():
         return jsonify({'error': 'Failed to get data from API'}), 500
 
 
-# THINGS TO DO:
-# ENDPOINT: '/get_trips' this endpoint will be returning the user trips stored in our database
 @app.route('/users/trips', methods=["GET"])
+@require_auth
 def get_trips():
-    # if "user_id" not in session:
-    #     abort(401, "Unauthorized")
     user_session_id = session.get('user_id')
-    print(user_session_id)
     user = db.session.get(User, user_session_id)
+
     if user is None:
         abort(404, description='User not found')
 
@@ -145,16 +147,16 @@ def get_trips():
     return response, 200
 
 
-# ENDPOINT: '/delete_trip' this endpoint deletes a user trip from our database
 @app.route('/user/trips/<trip_id>', methods=['DELETE'])  # this is wrong bs u can delete any trip of any user
+@require_auth
 def delete_trip(trip_id):
     trip = Trip.query.get(trip_id)
     if trip is None:
-        abort(404, description='Trip not found')
+        return jsonify({"error": "Trip not found."}), 404
 
     user_session_id = session.get('user_id')
     if trip.user.id != user_session_id:
-        abort(403, description='You are not authorized to delete this trip')
+        return jsonify({"error": "Unauthorized to delete this trip"}), 403
 
     db.session.delete(trip)
     db.session.commit()
@@ -162,13 +164,13 @@ def delete_trip(trip_id):
     return jsonify({'message': 'Trip and associated data deleted successfully'}), 200
 
 
-# ENDPOINT: '/add_trip' this endpoint adds a user trip to our database
 @app.route('/users/trips', methods=['POST'])
+@require_auth
 def add_trip():
     user_session_id = session.get('user_id')
     user = User.query.get(user_session_id)
     if user is None:
-        abort(404, description='User not found')
+        return jsonify({"error": "User not found."}), 404
 
     # Get the necessary data from the request
     destination = request.json.get('destination')
@@ -187,23 +189,22 @@ def add_trip():
     return jsonify(trip.serialize()), 201
 
 
-# ENDPOINT: '/add_plan' this endpoint adds the plan to a user trip and then store it to database,
-# like add the plan to favorites but the favorite is inside the list of trips... is not an easy task tbh xd
 @app.route('/trips/<trip_id>/plans', methods=['POST'])
+@require_auth
 def add_plan(trip_id):
     trip = Trip.query.filter_by(id=trip_id).first()
     if not trip:
-        abort(404, description='Trip not found')
+        return jsonify({"error": "Trip not found"}), 404
 
     data = request.get_json()
     if not data:
-        abort(400, description='No data provided.')
+        return jsonify({"error": "No data provided"}), 400
 
     day_number = data.get('day')
     activities = data.get('activities')
 
     if not day_number:
-        abort(400, description='Day number is required.')
+        return jsonify({"error": "Day number is required"}), 400
 
     plan = Plan(id=create_uuid(), day_number=day_number, trip_id=trip_id)
     db.session.add(plan)
@@ -214,7 +215,7 @@ def add_plan(trip_id):
             description = activity_data.get('description')
 
             if not hour:
-                abort(400, description='Hour is required for each activity.')
+                return jsonify({"error": "Hour is required for each activity"}), 400
 
             activity = Activity(id=create_uuid(), hour=hour, description=description, plan_id=plan.id)
             db.session.add(activity)
@@ -225,6 +226,7 @@ def add_plan(trip_id):
 
 
 @app.route("/trips/<trip_id>/plan", methods=["GET"])
+@require_auth
 def get_plan_from_db(trip_id):
     trip = Trip.query.get(trip_id)
     if trip is None:
@@ -233,10 +235,13 @@ def get_plan_from_db(trip_id):
     plan = []
     for plan_entry in trip.plans:
         day_activities = {
+            "id": plan_entry.id,
             "day": plan_entry.day_number,
             "activities": []
         }
-        for activity in plan_entry.activities:
+        activities_sorted_by_hour = sorted(plan_entry.activities,
+                                           key=lambda act: datetime.datetime.strptime(act.hour, "%I:%M %p"))
+        for activity in activities_sorted_by_hour:
             day_activities["activities"].append({
                 "time": activity.hour,
                 "description": activity.description
@@ -246,7 +251,22 @@ def get_plan_from_db(trip_id):
     return jsonify({"plan": plan})
 
 
-# TEST: create a py file named 'test' and create the structure for the test (same as in the course, as we already did)
+@app.route('/trips/<trip_id>/plans/<plan_id>', methods=['DELETE'])
+@require_auth
+def delete_plan(trip_id, plan_id):
+    trip = Trip.query.filter_by(id=trip_id).first()
+    if not trip:
+        return jsonify({"error": "Trip not found"}), 404
+
+    plan = Plan.query.filter_by(id=plan_id, trip_id=trip_id).first()
+    if not plan:
+        return jsonify({"error": "Plan not found"}), 404
+
+    db.session.delete(plan)
+    db.session.commit()
+
+    return jsonify({'message': 'Plan deleted successfully.'}), 200
+
 
 @app.route("/logout", methods=["POST"])
 def logout_user():
