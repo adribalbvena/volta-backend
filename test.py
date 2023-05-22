@@ -5,7 +5,7 @@ from flask import session
 from main import app
 from models import User, Trip
 
-
+#
 # patch explanation: When applied to a test method, the @patch decorator specifies which objects or functions should be
 # patched with a mock implementation. It allows you to replace dependencies of the code under test with mock objects,
 # enabling you to control their behavior and assert against expected interactions.
