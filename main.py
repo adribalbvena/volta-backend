@@ -122,7 +122,7 @@ def logout_user():
 
 # ----------------TRIP ROUTES----------------
 
-@app.route('/users/trips', methods=["GET"])
+@app.route('/trips', methods=["GET"])
 @require_auth
 def get_trips():
     try:
@@ -144,7 +144,7 @@ def get_trips():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/user/trips/<trip_id>', methods=['DELETE'])  # this is wrong bs u can delete any trip of any user
+@app.route('/trips/<trip_id>', methods=['DELETE'])  # this is wrong bs u can delete any trip of any user
 @require_auth
 def delete_trip(trip_id):
     try:
@@ -164,7 +164,7 @@ def delete_trip(trip_id):
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/users/trips', methods=['POST'])
+@app.route('/trips', methods=['POST'])
 @require_auth
 def add_trip():
     try:
@@ -220,7 +220,7 @@ def get_plan():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/trips/<trip_id>/plans', methods=['POST'])
+@app.route('/trips/<trip_id>/plan', methods=['POST'])
 @require_auth
 def add_plan(trip_id):
     try:
@@ -290,7 +290,7 @@ def get_plan_from_db(trip_id):
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/trips/<trip_id>/plans/<plan_id>', methods=['DELETE'])
+@app.route('/trips/<trip_id>/plan/<plan_id>', methods=['DELETE'])
 @require_auth
 def delete_plan(trip_id, plan_id):
     try:
