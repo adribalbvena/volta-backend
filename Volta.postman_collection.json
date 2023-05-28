@@ -1,0 +1,520 @@
+{
+	"info": {
+		"_postman_id": "94bf956c-3e1f-4f64-b429-02b20b633d82",
+		"name": "Volta",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20797613"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"user@gmail.com\",\n    \"password\": \"1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"user@gmail.com\",\n    \"password\": \"1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Current User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/@current_user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"@current_user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/logout",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Plan",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/get_plan?days={enter number of days}&destination={enter city destination}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"get_plan"
+					],
+					"query": [
+						{
+							"key": "days",
+							"value": "{enter number of days}"
+						},
+						{
+							"key": "destination",
+							"value": "{enter city destination}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Plan",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8080/get_plan?days=2&destination=Madrid",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"get_plan"
+							],
+							"query": [
+								{
+									"key": "days",
+									"value": "2"
+								},
+								{
+									"key": "destination",
+									"value": "Madrid"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.3 Python/3.11.2"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 15 May 2023 16:56:10 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1264"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=a3e61a94-df92-43de-9d88-0682942d3841.WK8rFIWVfzqrvrRBJSJ0Q4loubw; HttpOnly; Path=/"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_id\": \"6462642aca159c48b92e06c7\",\n    \"key\": \"2-madrid\",\n    \"plan\": [\n        {\n            \"activities\": [\n                {\n                    \"description\": \"Visit the Royal Palace of Madrid\",\n                    \"time\": \"10:00 AM\"\n                },\n                {\n                    \"description\": \"Explore the Puerta del Sol\",\n                    \"time\": \"12:00 PM\"\n                },\n                {\n                    \"description\": \"Lunch at Mercado de San Miguel\",\n                    \"time\": \"2:00 PM\"\n                },\n                {\n                    \"description\": \"Visit the Prado Museum\",\n                    \"time\": \"4:00 PM\"\n                },\n                {\n                    \"description\": \"Relax at Retiro Park\",\n                    \"time\": \"7:00 PM\"\n                }\n            ],\n            \"day\": 1\n        },\n        {\n            \"activities\": [\n                {\n                    \"description\": \"Visit the Gran Vía shopping district\",\n                    \"time\": \"9:00 AM\"\n                },\n                {\n                    \"description\": \"Explore the Reina Sofía Museum\",\n                    \"time\": \"12:00 PM\"\n                },\n                {\n                    \"description\": \"Lunch at Cafe de Oriente\",\n                    \"time\": \"2:00 PM\"\n                },\n                {\n                    \"description\": \"Visit the Temple of Debod\",\n                    \"time\": \"4:00 PM\"\n                },\n                {\n                    \"description\": \"Evening in La Latina neighborhood\",\n                    \"time\": \"7:00 PM\"\n                }\n            ],\n            \"day\": 2\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Trip",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"destination\": \"Milan\",\n    \"start_date\": \"20/05/2023\",\n    \"end_date\": \"21/05/2023\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User trips",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get User trips",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8080/users/trips",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"trips"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.3 Python/3.11.2"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 15 May 2023 07:26:20 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1411"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=389fecd1-1196-4705-8fb3-8a9a9d73e27d.7EkYu_vK2km4UARFA11ne-9GQnY; HttpOnly; Path=/"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"creation_date\": \"14/05/2023\",\n        \"destination\": \"Milan\",\n        \"end_date\": \"21/05/2023\",\n        \"id\": \"9b345c9250d14271834ebf6b46659400\",\n        \"start_date\": \"20/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"Casa\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"87ebba310bb04e869092bcd87a5b29f4\",\n        \"start_date\": \"18/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"Cosoito\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"37d9fea14e8e44c89d7226086ea0f427\",\n        \"start_date\": \"18/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"Cosooo\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"65e0d8feb74541fdb0c9477b068e5dd8\",\n        \"start_date\": \"18/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"Coso\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"\",\n        \"start_date\": \"18/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"London\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"464cbb1aa0c84d91aa40022298396961\",\n        \"start_date\": \"18/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"London\",\n        \"end_date\": \"20/05/2023\",\n        \"id\": \"5e71570c-1fd4-481e-98b5-dbd6daca9658\",\n        \"start_date\": \"15/05/2023\"\n    },\n    {\n        \"creation_date\": \"13/05/2023\",\n        \"destination\": \"Berlin\",\n        \"end_date\": \"22/05/2023\",\n        \"id\": \"53eb1d2006e84d63a703b73033ac3581\",\n        \"start_date\": \"18/05/2023\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Delete User Trip",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips/{enter trip id}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips",
+						"{enter trip id}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add plan",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"description\": \"Arrive in London and check-in to hotel\",\n            \"time\": \"9:00 AM\"\n        },\n        {\n            \"description\": \"Visit the British Museum\",\n            \"time\": \"11:00 PM\"\n        },\n        {\n            \"description\": \"Lunch at Mercado de San Miguel\",\n            \"time\": \"2:00 PM\"\n        },\n        {\n            \"description\": \"Visit the Prado Museum\",\n            \"time\": \"4:00 PM\"\n        },\n        {\n            \"description\": \"Relax at Retiro Park\",\n            \"time\": \"7:00 PM\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips/{enter trip id}/plan",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips",
+						"{enter trip id}",
+						"plan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Plan from db",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips/{enter trip id}/plan",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips",
+						"{enter trip id}",
+						"plan"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Plan from db",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8080/trips/fbd6002b33f34d9eb2f8e454e648a332/plan",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"trips",
+								"fbd6002b33f34d9eb2f8e454e648a332",
+								"plan"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.3 Python/3.11.2"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 19 May 2023 09:07:18 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1302"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "session=a492bd0d-8418-4216-988e-1139ff9aeae9.jQaoLOTnyDlsoqZGnoo7FylrpJ8; HttpOnly; Path=/"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"plan\": [\n        {\n            \"activities\": [\n                {\n                    \"description\": \"Visit the Royal Palace of Madrid\",\n                    \"time\": \"10:00 AM\"\n                },\n                {\n                    \"description\": \"Lunch at Mercado de San Miguel\",\n                    \"time\": \"2:00 PM\"\n                },\n                {\n                    \"description\": \"Explore the Puerta del Sol\",\n                    \"time\": \"12:00 PM\"\n                },\n                {\n                    \"description\": \"Visit the Prado Museum\",\n                    \"time\": \"4:00 PM\"\n                },\n                {\n                    \"description\": \"Relax at Retiro Park\",\n                    \"time\": \"7:00 PM\"\n                }\n            ],\n            \"day\": 1,\n            \"id\": \"bcb7982887a8497fbaa52789e9dd4b44\"\n        },\n        {\n            \"activities\": [\n                {\n                    \"description\": \"Visit the Gran Vía shopping district\",\n                    \"time\": \"9:00 AM\"\n                },\n                {\n                    \"description\": \"Lunch at Cafe de Oriente\",\n                    \"time\": \"2:00 PM\"\n                },\n                {\n                    \"description\": \"Evening in La Latina neighborhood\",\n                    \"time\": \"7:00 PM\"\n                },\n                {\n                    \"description\": \"Visit the Temple of Debod\",\n                    \"time\": \"4:00 PM\"\n                },\n                {\n                    \"description\": \"Explore the Reina Sofía Museum\",\n                    \"time\": \"12:00 PM\"\n                }\n            ],\n            \"day\": 2,\n            \"id\": \"5e290cd506ff4e8fb66c7b2d297846c9\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Plan from db",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/trips/{enter trip id}/plan/{enter plan id}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"trips",
+						"{enter trip id}",
+						"plan",
+						"{enter plan id}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
