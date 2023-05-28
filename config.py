@@ -8,7 +8,7 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.environ["SECRET_KEY"]
     # set our local database:
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://adri:cfgadri@localhost/volta'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@localhost/volta'
     # to stop loggin messages when we do anything:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # to know the state of the db when we run a function (it shows the sql queries that are happening behind scenes):
