@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch
 import requests
-from flask import session
 from main import app
-from models import User, Trip
+from models import User
+
 
 #
 # patch explanation: When applied to a test method, the @patch decorator specifies which objects or functions should be

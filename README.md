@@ -6,7 +6,7 @@
    1. running the following command: `pip install -r requirements.txt`
    2. or you can install the packages one by one, by putting your mouse over the import and clicking 'install package...'
 5. In the root directory create the **.env** file and set:
-    1. **SECRET_KEY=provided with the source code link**
+    1. **SECRET_KEY=yoursecretkey**
     2. **PLAN_KEY=provided with the source code link**
 6. In **config.py**  line 11 set your local mysql database user name and password
 7. Download a local instance of Redis to store the session data:
